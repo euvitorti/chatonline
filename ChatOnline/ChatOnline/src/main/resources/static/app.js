@@ -1,12 +1,19 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/gs-guide-websocket'
+    brokerURL: 'ws://localhost:8080/topic'
 });
+
+function setConnected(connected) {
+                document.getElementById('connect').disabled = connected;
+                document.getElementById('disconnect').disabled = !connected;
+                document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+                document.getElementById('response').innerHTML = '';
+            }
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
+    stompClient.subscribe('/topic/messages', function(messageOutput) => {
+        showMessageOutput(JSON.parse(messageOutput.body));
     });
 };
 
@@ -19,17 +26,6 @@ stompClient.onStompError = (frame) => {
     console.error('Additional details: ' + frame.body);
 };
 
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
 
 function connect() {
     stompClient.activate();
@@ -41,20 +37,21 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.publish({
-        destination: "/app/hello",
-        body: JSON.stringify({'name': $("#name").val()})
-    });
-}
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
-}
+// codigo 2
 
-$(function () {
-    $("form").on('submit', (e) => e.preventDefault());
-    $( "#connect" ).click(() => connect());
-    $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendName());
-});
+ function sendMessage() {
+                var from = document.getElementById('from').value;
+                var text = document.getElementById('text').value;
+                stompClient.send("/app/chat", {},
+                  JSON.stringify({'from':from, 'text':text}));
+            }
+
+
+function showMessageOutput(messageOutput) {
+                var response = document.getElementById('response');
+                var p = document.createElement('p');
+                p.style.wordWrap = 'break-word';
+                p.appendChild(document.createTextNode(messageOutput.from + ": " + messageOutput.text + " (" + messageOutput.time + ")"));
+                response.appendChild(p);
+}

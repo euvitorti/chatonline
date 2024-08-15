@@ -1,12 +1,16 @@
 package br.chat.ChatOnline.models;
 
-import java.util.Date;
+public class OutPutMessage{
 
-public class ChatMessage {
+    String from;
+    String text;
 
-    private String from;
-    private String text;
-    private Date date;
+    public OutPutMessage(String from, String text) {
+        this.from = from;
+        this.text = text;
+    }
+
+    public OutPutMessage(){}
 
     public String getFrom() {
         return from;
@@ -24,11 +28,5 @@ public class ChatMessage {
         this.text = text;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }
+
