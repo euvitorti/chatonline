@@ -1,34 +1,32 @@
 package br.chat.ChatOnline.models;
 
-import java.util.Date;
-
 public class ChatMessage {
 
-    private String from;
-    private String text;
-    private Date date;
+    private String content;
+    private String sender;
 
-    public String getFrom() {
-        return from;
+    public ChatMessage() {
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public ChatMessage(String content, String sender) {
+        this.content = content;
+        this.sender = sender;
     }
 
-    public String getText() {
-        return text;
+    // Getters e Setters
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Date getDate() {
-        return date;
+    public String getSender() {
+        return sender;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 }
