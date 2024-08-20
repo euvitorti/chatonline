@@ -1,5 +1,6 @@
 package br.chat.ChatOnline.controller.user;
 
+import br.chat.ChatOnline.controller.auth.AuthenticationController;
 import br.chat.ChatOnline.dto.auth.AuthenticationDTO;
 import br.chat.ChatOnline.models.user.User;
 import br.chat.ChatOnline.repository.user.IUserRepository;
@@ -27,6 +28,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private AuthenticationController authenticationController;
 
     @PostMapping
     @Transactional

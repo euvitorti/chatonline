@@ -11,10 +11,15 @@
 <body>
     <div class="login-container">
         <h1>Sign In</h1>
-        <input type="email" placeholder="email" required>
-        <input type="password" placeholder="senha" required>
-        <button>Cadastre-se</button>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="username" required>
+            <input type="password" id="password" placeholder="senha" required>
+            <button type="submit">Cadastre-se</button>
+        </form>
+        <p id="error-message" style="color: red;"></p>
     </div>
+
+    <script src="../../script/cadastrar.js"></script>
 </body>
 
 </html>

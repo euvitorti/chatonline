@@ -35,6 +35,8 @@ public class Security  implements WebMvcConfigurer{
                     req.requestMatchers("/login.html").permitAll();
                     req.requestMatchers("/users").permitAll();
                     req.requestMatchers("/login").permitAll();
+                    req.requestMatchers("/signin.html").permitAll();
+                    req.requestMatchers("/signin").permitAll();
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "swagger-ui/**").permitAll();
                     // QUALQUER OUTRA REQUISIÇÃO ESTÁ BLOQUEADA
                     req.anyRequest().authenticated();
@@ -61,7 +63,8 @@ public class Security  implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("ADICIONE AQUI A URL PERMITIDA")
+                .allowedOrigins("https://localhost:5501")
+                .allowedOrigins("http://localhost:63342")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
     }
 }

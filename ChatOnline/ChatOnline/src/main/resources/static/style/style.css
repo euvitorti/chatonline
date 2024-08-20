@@ -22,7 +22,7 @@ h1 {
     margin-bottom: 5rem;
 }
 
-input[type="email"],
+input[type="text"],
 input[type="password"] {
     width: 90%;
     padding: 1rem;
@@ -30,6 +30,7 @@ input[type="password"] {
     border: 0.1rem solid #E1C1E5;
     border-radius: 0.7rem;
 }
+
 
 .links {
     display: flex;
