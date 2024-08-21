@@ -25,31 +25,21 @@ public class Security  implements WebMvcConfigurer{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        // Para desabilitar a proteção ataques do tipo CSRF (Cross-Site Request Forgery)
-        // Motivo: O TOKEN já vem habilitado para esse tipo de ataque, logo seria redundante
-
         return httpSecurity.csrf(c -> c.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // A REQUISIÇÃO É LIBERADA
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login.html").permitAll();
+                    req.requestMatchers("/users/login").permitAll();
                     req.requestMatchers("/users").permitAll();
                     req.requestMatchers("/login").permitAll();
-                    req.requestMatchers("/signin.html").permitAll();
                     req.requestMatchers("/signin").permitAll();
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "swagger-ui/**").permitAll();
                     // QUALQUER OUTRA REQUISIÇÃO ESTÁ BLOQUEADA
                     req.anyRequest().authenticated();
                 })
-                // ESTE FILTRO IRÁ VIM ANTES DO FILTRO DO SPRING
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    // O @BEAN SERVE PARA EXPORTAR UMA CLASSE PARA O SPRING,
-    // FAZENDO COM QUE ELE CONSIGA CARREGÁ-LA E REALIZE A SUA INJEÇÃO DE DEPENDÊNCIA EM OUTRAS CLASSES
-
-    // CRIAR UM OBJETO AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
