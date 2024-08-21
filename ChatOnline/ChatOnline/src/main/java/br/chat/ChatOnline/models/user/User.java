@@ -3,16 +3,19 @@ package br.chat.ChatOnline.models.user;
 import br.chat.ChatOnline.dto.auth.AuthenticationDTO;
 import br.chat.ChatOnline.models.chat.Message;
 import br.chat.ChatOnline.models.media.Media;
-import br.chat.ChatOnline.service.user.UserService;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +25,7 @@ public class User {
     private String username;
 
     @Column(nullable = false, length = 255)
-    private String passwordHash;
+    private String password;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -38,9 +41,9 @@ public class User {
 
     public User(){}
 
-    public User(AuthenticationDTO authenticationDTO, String passwordHash) {
+    public User(AuthenticationDTO authenticationDTO, String password) {
         this.username = authenticationDTO.userName();
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
     // Getters and Setters
@@ -53,8 +56,38 @@ public class User {
         this.id = id;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public void setUsername(String username) {
@@ -62,11 +95,11 @@ public class User {
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return password;
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+        this.password = passwordHash;
     }
 
     public LocalDateTime getCreatedAt() {
