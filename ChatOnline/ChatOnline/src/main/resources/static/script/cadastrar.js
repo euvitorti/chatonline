@@ -1,4 +1,15 @@
 async function cadastrar(event) {
+
+    let route = async (req, data) => {
+        return await fetch(`http://localhost:8080/${req}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    };
+
     // Previne o comportamento padrão do formulário
     event.preventDefault();
 
@@ -13,18 +24,13 @@ async function cadastrar(event) {
     };
 
     try {
-        // Envia uma requisição POST para '/users' com os dados em formato JSON
-        let response = await fetch('http://localhost:8080/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+        let response = route("users", data);
 
         // Verifica se a resposta não é bem-sucedida
         if (!response.ok) {
             throw new Error('Sign in failed.');
+        } else {
+            response = route("users/login", data);
         }
 
         // Processa a resposta JSON
