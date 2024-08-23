@@ -17,6 +17,7 @@ public class TokenJwt {
     private String secret = "dontgiveup";
 
     public String generateToken(User user) {
+
         try {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()

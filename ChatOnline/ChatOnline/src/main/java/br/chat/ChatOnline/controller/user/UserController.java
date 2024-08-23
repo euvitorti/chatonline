@@ -2,7 +2,6 @@ package br.chat.ChatOnline.controller.user;
 
 import br.chat.ChatOnline.controller.auth.AuthenticationController;
 import br.chat.ChatOnline.dto.auth.AuthenticationDTO;
-import br.chat.ChatOnline.dto.auth.TokenJwtDTO;
 import br.chat.ChatOnline.models.user.User;
 import br.chat.ChatOnline.repository.user.IUserRepository;
 import br.chat.ChatOnline.service.user.UserService;
@@ -31,7 +30,7 @@ public class UserController {
     @PostMapping
     @Transactional
     public ResponseEntity register(@RequestBody @Valid AuthenticationDTO authenticationDTO, UriComponentsBuilder uriComponentsBuilder){
-        String hashedPassword = userService.passwordHash(authenticationDTO.password());
+        String hashedPassword = userService.hashPassword(authenticationDTO.password());
         var user = new User(authenticationDTO, hashedPassword);
         iUserRepository.save(user);
 
