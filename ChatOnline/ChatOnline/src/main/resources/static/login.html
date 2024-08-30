@@ -5,8 +5,9 @@
     <meta charset="UTF-8" />
     <title>Chat Online</title>
 
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"-->
-    <!--          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />-->
+    <!-- CSS (descomente se necessário) -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"-->
+    <!-- integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />-->
 
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
@@ -18,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
@@ -47,7 +49,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="row mt-3">
             <div class="col-12">
@@ -91,83 +92,6 @@
             </div>
         </div>
     </div>
-
-
-    <script>
-
-        function setConnected(connected) {
-            $("#connect").text("Connected").attr("disabled", true);
-            $("#send").attr("disabled", false);
-        }
-
-        // Manipulador de envio do formulário de login
-        $("#login-form").submit((e) => {
-            e.preventDefault();
-
-            // Atualiza os valores do usuário e senha
-            var username = document.querySelector('#username').value;
-            var password = document.querySelector('#password').value;
-
-            // Cria um objeto com os dados de login
-            var data = {
-                userName: username,
-                password: password
-            };
-
-            fetch('http://localhost:8080/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Login failed.');
-                }
-                return response.json();
-            }).then(data => {
-                console.log(data);
-                localStorage.setItem('Bearer Token', data.token);
-                localStorage.setItem("username", username); // Atualiza o armazenamento do username
-                $("#login-div").hide();
-                $("#connect-div").removeClass("d-none");
-            }).catch(err => {
-                alert("Invalid username or password");
-            });
-        });
-
-        // Manipulador de clique para conectar ao WebSocket
-        $("#connect").click(() => {
-            const socket = new SockJS("/ws");
-            stompClient = Stomp.over(socket);
-            stompClient.connect({
-                Authorization: `Bearer ${localStorage.getItem("Bearer Token")}`
-            }, (frame) => {
-                console.log(frame);
-                setConnected();
-
-                stompClient.subscribe("/topic/messages", (message) => {
-                    const data = JSON.parse(message.body);
-                    console.log(data);
-
-                    $("#tbody").append(`<tr><td>${data.message}</td><td>${data.from}</td></tr>`);
-                });
-            }, (error) => {
-                console.error('Error during WebSocket connection:', error);
-            });
-        });
-
-        // Manipulador de envio do formulário de mensagens
-        $("#send-form").submit((e) => {
-            e.preventDefault();
-            stompClient.send("/app/chat", {}, JSON.stringify({
-                to: $("#login").val(),  // Nome do usuário destinatário
-                message: $("#message").val(),
-                from: localStorage.getItem("username")  // Nome do usuário remetente
-            }));
-        });
-
-    </script>
 </body>
 
 </html>

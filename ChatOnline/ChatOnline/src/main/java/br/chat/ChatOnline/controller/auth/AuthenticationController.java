@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 // CLASSE CONTROLLER NÃO DEVE TER REGRAS DE NOGÓCIO DA APLICAÇÃO
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     // ESTA É CLASSE QUE DISPARA O PROCESSO DE AUTENTICAÇÃO
@@ -27,7 +27,7 @@ public class AuthenticationController {
     @Autowired
     private TokenJwt tokenJwt;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO authenticationDTO) {
         try {
             var authToken = new UsernamePasswordAuthenticationToken(authenticationDTO.userName(), authenticationDTO.password());
@@ -42,3 +42,21 @@ public class AuthenticationController {
         }
     }
 }
+
+
+//    @Autowired
+//    private AuthenticationService authenticationService;
+
+//    @PostMapping
+//    public ResponseEntity<AuthRespDto> login(@RequestBody @Valid AuthenticationDTO authenticationDTO) {
+//        Authentication authenticate = authenticationManager
+//                .authenticate(
+//                        new UsernamePasswordAuthenticationToken(
+//                                authenticationDTO.userName(),
+//                                authenticationDTO.password()));
+//        SecurityContextHolder.getContext().setAuthentication(authenticate);
+//        UserDetails userDetails = authenticationService.loadUserByUsername(authenticationDTO.userName());
+//        String token = tokenJwt.generateToken(userDetails);
+//
+//        return ResponseEntity.ok(new AuthRespDto(authenticationDTO.userName(), authenticationDTO.password()));
+//    }

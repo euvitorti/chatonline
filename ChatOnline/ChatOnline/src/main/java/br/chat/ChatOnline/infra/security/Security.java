@@ -1,5 +1,6 @@
 package br.chat.ChatOnline.infra.security;
 
+import br.chat.ChatOnline.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,18 +23,21 @@ public class Security  implements WebMvcConfigurer{
     @Autowired
     private Filter filter;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
         return httpSecurity.csrf(c -> c.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login.html").permitAll();
                     req.requestMatchers("/users/login").permitAll();
                     req.requestMatchers("/users").permitAll();
-                    req.requestMatchers("/login").permitAll();
+                    req.requestMatchers("/auth/login").permitAll();
                     req.requestMatchers("/signin").permitAll();
-                    // QUALQUER OUTRA REQUISIÇÃO ESTÁ BLOQUEADA
+                    req.requestMatchers("/api/v1/auth/**").permitAll(); // Permitir acesso ao endpoint de autenticação
+                    req.requestMatchers("/index.html", "/ws/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
@@ -50,11 +54,29 @@ public class Security  implements WebMvcConfigurer{
         return new BCryptPasswordEncoder();
     }
 
+//    @Override
+//    public void addCorsMappings(CorsRegistry corsRegistry) {
+//        corsRegistry.addMapping("/**")
+//                .allowedOrigins("https://localhost:5501")
+//                .allowedOrigins("http://localhost:63342")
+//                .allowedOrigins("http://localhost:8080/index.html")
+//                .allowedOrigins("http://localhost:8080/index.html")
+//                .allowedOrigins("http://localhost:8080/login.html")
+//                .allowedOrigins("http://localhost:8080")
+//                .allowedOrigins("http://localhost:8080/")
+//                .allowedOrigins("http://localhost:63342/")
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
+//    }
+
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("https://localhost:5501")
-                .allowedOrigins("http://localhost:63342")
+                .allowedOrigins(
+                        "http://localhost:8080",
+                        "http://localhost:63342",
+                        "https://localhost:5501"
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
     }
+
 }

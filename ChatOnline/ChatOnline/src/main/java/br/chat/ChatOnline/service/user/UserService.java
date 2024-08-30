@@ -10,10 +10,6 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void PasswordService() {
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    }
-
     public String hashPassword(String rawPassword) {
         return bCryptPasswordEncoder.encode(rawPassword);
     }
