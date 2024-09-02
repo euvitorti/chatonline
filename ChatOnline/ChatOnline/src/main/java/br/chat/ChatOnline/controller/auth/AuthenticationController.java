@@ -42,21 +42,3 @@ public class AuthenticationController {
         }
     }
 }
-
-
-//    @Autowired
-//    private AuthenticationService authenticationService;
-
-//    @PostMapping
-//    public ResponseEntity<AuthRespDto> login(@RequestBody @Valid AuthenticationDTO authenticationDTO) {
-//        Authentication authenticate = authenticationManager
-//                .authenticate(
-//                        new UsernamePasswordAuthenticationToken(
-//                                authenticationDTO.userName(),
-//                                authenticationDTO.password()));
-//        SecurityContextHolder.getContext().setAuthentication(authenticate);
-//        UserDetails userDetails = authenticationService.loadUserByUsername(authenticationDTO.userName());
-//        String token = tokenJwt.generateToken(userDetails);
-//
-//        return ResponseEntity.ok(new AuthRespDto(authenticationDTO.userName(), authenticationDTO.password()));
-//    }
