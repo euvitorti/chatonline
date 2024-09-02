@@ -49,16 +49,16 @@ class AuthenticationControllerTest {
     @DisplayName("Deve retornar HTTP 200 e token quando o login for bem-sucedido")
     void loginSuccessful() throws Exception {
         var authenticationDTO = new AuthenticationDTO("userName", "password");
-        var user = new User(); // Supondo que o construtor padrão está disponível
+        var user = new User();
         var authToken = new UsernamePasswordAuthenticationToken(authenticationDTO.userName(), authenticationDTO.password());
         var auth = Mockito.mock(Authentication.class);
 
         // Configuração dos mocks
         when(authenticationManager.authenticate(authToken)).thenReturn(auth);
-        when(auth.getPrincipal()).thenReturn(user);
+        when(auth.getPrincipal()).thenReturn(user); // Retorno correto do tipo User
         when(tokenJwt.generateToken(user)).thenReturn("fake-jwt-token");
 
-        var response = mockMvc.perform(post("/auth/login")  // Verifique o endpoint aqui
+        var response = mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest.write(authenticationDTO).getJson()))
                 .andReturn()
@@ -78,7 +78,35 @@ class AuthenticationControllerTest {
         // Simulação de falha na autenticação
         when(authenticationManager.authenticate(authToken)).thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        var response = mockMvc.perform(post("/auth/login")  // Verifique o endpoint aqui
+        var response = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest.write(authenticationDTO).getJson()))
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getContentAsString()).contains("Invalid credentials");
+    }
+
+    @Test
+    @DisplayName("Return 400 HTTP when userName is in blank")
+    void loginFailedUserInBlank() throws Exception {
+        var authenticationDTO = new AuthenticationDTO("", "wrongPassword");
+        loginFailed(authenticationDTO);
+    }
+
+    @Test
+    @DisplayName("Return 400 HTTP when password is in blank")
+    void loginFailedPasswordInBlank() throws Exception {
+        var authenticationDTO = new AuthenticationDTO("userName", "");
+        loginFailed(authenticationDTO);
+    }
+
+    private void loginFailed(AuthenticationDTO authenticationDTO) throws Exception {
+        var authToken = new UsernamePasswordAuthenticationToken(authenticationDTO.userName(), authenticationDTO.password());
+        when(authenticationManager.authenticate(authToken)).thenThrow(new BadCredentialsException("Invalid credentials"));
+
+        var response = mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest.write(authenticationDTO).getJson()))
                 .andReturn()
