@@ -19,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,22 +45,20 @@ class AuthenticationControllerTest {
     @MockBean
     private TokenJwt tokenJwt;
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
     @Test
-    @DisplayName("Should return HTTP 200 and token when login is successful")
+    @DisplayName("Deve retornar HTTP 200 e token quando o login for bem-sucedido")
     void loginSuccessful() throws Exception {
         var authenticationDTO = new AuthenticationDTO("userName", "password");
         var user = new User(); // Supondo que o construtor padrão está disponível
         var authToken = new UsernamePasswordAuthenticationToken(authenticationDTO.userName(), authenticationDTO.password());
         var auth = Mockito.mock(Authentication.class);
 
+        // Configuração dos mocks
         when(authenticationManager.authenticate(authToken)).thenReturn(auth);
         when(auth.getPrincipal()).thenReturn(user);
         when(tokenJwt.generateToken(user)).thenReturn("fake-jwt-token");
 
-        var response = mockMvc.perform(post("/login")
+        var response = mockMvc.perform(post("/auth/login")  // Verifique o endpoint aqui
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest.write(authenticationDTO).getJson()))
                 .andReturn()
@@ -73,14 +70,15 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    @DisplayName("Should return HTTP 400 when login fails")
+    @DisplayName("Deve retornar HTTP 400 quando o login falhar")
     void loginFailed() throws Exception {
         var authenticationDTO = new AuthenticationDTO("userName", "wrongPassword");
         var authToken = new UsernamePasswordAuthenticationToken(authenticationDTO.userName(), authenticationDTO.password());
 
+        // Simulação de falha na autenticação
         when(authenticationManager.authenticate(authToken)).thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        var response = mockMvc.perform(post("/login")
+        var response = mockMvc.perform(post("/auth/login")  // Verifique o endpoint aqui
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest.write(authenticationDTO).getJson()))
                 .andReturn()
