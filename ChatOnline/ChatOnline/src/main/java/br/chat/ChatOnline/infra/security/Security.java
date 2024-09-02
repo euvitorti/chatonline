@@ -54,20 +54,6 @@ public class Security  implements WebMvcConfigurer{
         return new BCryptPasswordEncoder();
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry corsRegistry) {
-//        corsRegistry.addMapping("/**")
-//                .allowedOrigins("https://localhost:5501")
-//                .allowedOrigins("http://localhost:63342")
-//                .allowedOrigins("http://localhost:8080/index.html")
-//                .allowedOrigins("http://localhost:8080/index.html")
-//                .allowedOrigins("http://localhost:8080/login.html")
-//                .allowedOrigins("http://localhost:8080")
-//                .allowedOrigins("http://localhost:8080/")
-//                .allowedOrigins("http://localhost:63342/")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
-//    }
-
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
