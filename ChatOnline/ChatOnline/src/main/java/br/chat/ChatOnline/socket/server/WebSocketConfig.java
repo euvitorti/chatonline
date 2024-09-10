@@ -1,6 +1,7 @@
 package br.chat.ChatOnline.socket.server;
 
 import br.chat.ChatOnline.infra.security.TokenJwt;
+import br.chat.ChatOnline.models.user.User;
 import br.chat.ChatOnline.service.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -38,8 +38,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("http://127.0.0.1:5501")
+                .withSockJS();
     }
+
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -62,7 +65,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                         try {
                             String username = jwtTokenUtil.getUsername(token);
-                            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                            User userDetails = userDetailsService.loadUserByUsername(username);
                             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                             SecurityContextHolder.getContext().setAuthentication(auth);
                             accessor.setUser(auth);

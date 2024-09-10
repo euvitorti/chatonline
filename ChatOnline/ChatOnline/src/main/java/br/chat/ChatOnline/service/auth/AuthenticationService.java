@@ -1,5 +1,6 @@
 package br.chat.ChatOnline.service.auth;
 
+import br.chat.ChatOnline.models.user.User;
 import br.chat.ChatOnline.repository.user.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ public class AuthenticationService implements UserDetailsService {
     private IUserRepository iUserRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return iUserRepository.findByUsername(username);
     }
 

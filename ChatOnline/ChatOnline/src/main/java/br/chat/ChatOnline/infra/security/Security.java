@@ -1,6 +1,5 @@
 package br.chat.ChatOnline.infra.security;
 
-import br.chat.ChatOnline.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +22,6 @@ public class Security  implements WebMvcConfigurer{
     @Autowired
     private Filter filter;
 
-    @Autowired
-    private AuthenticationService authenticationService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(c -> c.disable())
@@ -35,6 +31,7 @@ public class Security  implements WebMvcConfigurer{
                     req.requestMatchers("/users/login").permitAll();
                     req.requestMatchers("/users").permitAll();
                     req.requestMatchers("/auth/login").permitAll();
+                    req.requestMatchers("/auth/login.html").permitAll();
                     req.requestMatchers("/signin").permitAll();
                     req.requestMatchers("/api/v1/auth/**").permitAll(); // Permitir acesso ao endpoint de autenticação
                     req.requestMatchers("/index.html", "/ws/**").permitAll();
@@ -57,12 +54,11 @@ public class Security  implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins(
-                        "http://localhost:8080",
-                        "http://localhost:63342",
-                        "https://localhost:5501"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
+                .allowedOrigins("http://127.0.0.1:5501")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
+
 
 }
