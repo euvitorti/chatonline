@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -14,21 +13,13 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 public class MessageController {
 
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    /**
-     * Manipula mensagens recebidas no destino /chat e as envia para o usuário específico.
-     *
-     * @param message A mensagem recebida, contendo o nome de usuário e o conteúdo da mensagem.
-     */
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
+    @MessageMapping("/chat") // Endpoint for handling incoming chat messages
+    @SendTo("/topic/messages") // Broadcasts the message to subscribed clients
     public MessageDTO chat(@Payload MessageDTO message) {
         try {
-            // O log é opcional, mas pode ajudar a depurar ou monitorar as mensagens
-            return message;
+            return message; // Return the received message
         } catch (Exception e) {
-            return null; // Retorna null em caso de erro, mas isso pode ser personalizado
+            return null; // Returns null in case of an error, but this can be customized
         }
     }
 

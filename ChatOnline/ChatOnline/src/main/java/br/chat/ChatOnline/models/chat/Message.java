@@ -33,8 +33,6 @@ public class Message {
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Media> mediaFiles = new HashSet<>();
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -43,44 +41,12 @@ public class Message {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Set<Media> getMediaFiles() {
-        return mediaFiles;
-    }
-
-    public void setMediaFiles(Set<Media> mediaFiles) {
-        this.mediaFiles = mediaFiles;
     }
 }
 

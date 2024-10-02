@@ -31,8 +31,6 @@ public class Media {
     @Column(nullable = false)
     private LocalDateTime uploadedAt = LocalDateTime.now();
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -55,29 +53,5 @@ public class Media {
 
     public void setMessage(Message message) {
         this.message = message;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
-    public LocalDateTime getUploadedAt() {
-        return uploadedAt;
-    }
-
-    public void setUploadedAt(LocalDateTime uploadedAt) {
-        this.uploadedAt = uploadedAt;
     }
 }

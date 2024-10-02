@@ -46,8 +46,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    // Getters and Setters
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

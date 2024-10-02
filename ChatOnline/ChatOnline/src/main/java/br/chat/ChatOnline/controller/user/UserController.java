@@ -20,24 +20,26 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserController {
 
     @Autowired
-    private IUserRepository iUserRepository;
+    private IUserRepository iUserRepository; // Repository for user data
 
     @Autowired
-    private UserService userService;
+    private UserService userService; // Service for user-related operations
 
-    @Autowired
-    private AuthenticationController authenticationController;
-
+    // Endpoint for user registration
     @PostMapping
     @Transactional
     public ResponseEntity register(@RequestBody @Valid AuthenticationDTO authenticationDTO, UriComponentsBuilder uriComponentsBuilder){
+        // Hash the provided password
         String hashedPassword = userService.hashPassword(authenticationDTO.password());
+        // Create a new User object
         var user = new User(authenticationDTO, hashedPassword);
+        // Save the new user in the repository
         iUserRepository.save(user);
 
+        // Build the URI for the created user
         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
 
+        // Return a response indicating that the user has been created, along with the user details
         return ResponseEntity.created(uri).body(new AuthenticationDTO(authenticationDTO.userName(), authenticationDTO.password()));
     }
-
 }

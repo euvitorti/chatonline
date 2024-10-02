@@ -13,19 +13,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// O @Component é utilizado para que o Spring carregue uma classe/componente genérico
-
+// @Component annotation allows Spring to manage this class as a Spring bean
 @Component
 public class Filter extends OncePerRequestFilter {
 
     @Autowired
-    private TokenJwt tokenJwtService;
+    private TokenJwt tokenJwtService; // Service for handling JWT operations
 
     @Autowired
-    private IUserRepository iUserRepository;
+    private IUserRepository iUserRepository; // Repository for user data
 
-    // É IMPORTANTE DETERMINAR A ORDEM DOS FILTROS APLICADOS
-    // O PADRÃO DO SPRING É CHAMAR O FILTRO DELE, VERIFICAR SE O USUÁRIO ESTÁ LOGADO
+    // IMPORTANT: ORDER OF FILTERS MATTERS
+    // Spring's default behavior is to call its own filter to check if the user is logged in
 
     @Override
     protected void doFilterInternal(
@@ -33,30 +32,31 @@ public class Filter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        var tokenJWT = recoverToken(request);
+        var tokenJWT = recoverToken(request); // Extract token from the request
 
         if (tokenJWT != null) {
-            var subject = tokenJwtService.getSubject(tokenJWT);
+            var subject = tokenJwtService.getSubject(tokenJWT); // Get username from the token
 
-            // AUTENTICANOD O USUÁRIO, POIS O SPRING NÃO SABE QUE O USUÁRIO ESTÁ LOGADO
-            var user = iUserRepository.findByUsername(subject);
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            // AUTHENTICATING THE USER, AS SPRING DOES NOT KNOW THAT THE USER IS LOGGED IN
+            var user = iUserRepository.findByUsername(subject); // Retrieve user details from the repository
+            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()); // Create an authentication object
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication); // Set the authentication in the Security context
         }
 
-        // NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO
-        filterChain.doFilter(request, response);
+        // IMPORTANT: CONTINUE WITH THE NEXT FILTERS IN THE APPLICATION
+        filterChain.doFilter(request, response); // Proceed to the next filter in the chain
     }
 
+    // Method to extract the JWT from the Authorization header
     private String recoverToken(HttpServletRequest request) {
 
         var authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null) {
-            return authorizationHeader.replace("Bearer", "");
+            return authorizationHeader.replace("Bearer ", ""); // Remove "Bearer " prefix from the token
         }
 
-        return null;
+        return null; // Return null if no token is found
     }
 }
