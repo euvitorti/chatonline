@@ -89,9 +89,7 @@ Pré-requisitos
 - Maven
 - MySQL ou outro banco de dados de sua preferência, caso seja outro, atualize a dependência no pom.xml.
 - **Frontend**: O frontend da aplicação deve estar disponível. Você pode encontrar o repositório do frontend em [link do repositório do frontend](https://github.com/euvitorti/chatFront).
-
-Passos para Instalação
-Clone o repositório:
+- Clone o repositório:
 ```
 git clone https://github.com/euvitorti/chatonline.git
 cd chatonline
