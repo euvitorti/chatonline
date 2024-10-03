@@ -24,24 +24,21 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@EnableWebSocketMessageBroker // Enable WebSocket message handling
-@Order(Ordered.HIGHEST_PRECEDENCE + 99) // Setting the order of this configuration
-@RequiredArgsConstructor // Generates a constructor for dependency injection
-@Slf4j // Lombok annotation for logging
+@EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired
-    private TokenJwt jwtTokenUtil; // JWT utility for token handling
+    private TokenJwt jwtTokenUtil;
 
     @Autowired
-    private AuthenticationService userDetailsService; // Service for user authentication
+    private AuthenticationService userDetailsService;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Registering STOMP endpoints for WebSocket connections
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://127.0.0.1:5501") // Allowing specific origins for CORS
-                .setAllowedOrigins("http://127.0.0.1:5502") // Multiple origins can be set
                 .withSockJS(); // Enabling SockJS fallback options
     }
 
@@ -80,7 +77,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         }
                     }
                 }
-                return message; // Returning the original message
+                return message;
             }
         });
     }

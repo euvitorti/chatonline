@@ -14,7 +14,6 @@ import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.function.Function;
 
-// Service annotation indicates that this class provides token-related functionality
 @Service
 public class TokenJwt {
 

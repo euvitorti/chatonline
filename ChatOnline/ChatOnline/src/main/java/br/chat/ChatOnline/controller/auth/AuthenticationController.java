@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager; // Manages authentication operations.
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private TokenJwt tokenJwt; // Service for handling JWT token operations.
+    private TokenJwt tokenJwt;
 
     // Endpoint for user login.
     @PostMapping("/login")
